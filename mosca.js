@@ -32,7 +32,7 @@ module.exports = function (RED) {
         var moscaSettings = {
             interfaces: []
         };
-
+//https://github.com/mcollina/mosca/wiki/TLS-SSL-Configuration
         if (this.mqtt_port)
             moscaSettings.interfaces.push({type: "mqtt", port: this.mqtt_port});
         if (this.mqtt_ws_port)
