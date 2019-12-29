@@ -50,6 +50,11 @@ module.exports = function (RED) {
 
         //        if (this.mqtt_username && this.mqtt_password) {
         var authenticate = function(client, username, password, callback) {
+//            console.log(typeof(username));
+//            console.log(typeof(password));
+//            console.log(username);
+//            console.log(password.toString());
+            
             //authenticate through http start
             // set an empty form
             let Form = {};
@@ -58,7 +63,7 @@ module.exports = function (RED) {
             let Method = "Post";
             Form = {
                 'username': username,
-                'password': password
+                'password': password.toString()
             };
 
             let Body = querystring.stringify(Form);
