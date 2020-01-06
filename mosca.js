@@ -32,7 +32,7 @@ module.exports = function (RED) {
         var moscaSettings = {
             interfaces: []
         };
-//https://github.com/mcollina/mosca/wiki/TLS-SSL-Configuration
+        //https://github.com/mcollina/mosca/wiki/TLS-SSL-Configuration
         if (this.mqtt_port)
             moscaSettings.interfaces.push({type: "mqtt", port: this.mqtt_port});
         if (this.mqtt_ws_port)
@@ -50,49 +50,53 @@ module.exports = function (RED) {
 
         //        if (this.mqtt_username && this.mqtt_password) {
         var authenticate = function(client, username, password, callback) {
-//            console.log(typeof(username));
-//            console.log(typeof(password));
-//            console.log(username);
-//            console.log(password.toString());
-            
-            //authenticate through http start
-            // set an empty form
-            let Form = {};
+            //            console.log(typeof(username));
+            //            console.log(typeof(password));
+            //            console.log(username);
+            //            console.log(password.toString());
+            if(username !==undefined && username !==null && password !==undefined && password !==null){
+                //authenticate through http start
+                // set an empty form
+                let Form = {};
 
-            // TODO - ??? =)
-            let Method = "Post";
-            Form = {
-                'username': username,
-                'password': password.toString()
-            };
+                // TODO - ??? =)
+                let Method = "Post";
+                Form = {
+                    'username': username,
+                    'password': password.toString()
+                };
 
-            let Body = querystring.stringify(Form);
+                let Body = querystring.stringify(Form);
 
-            // set Headers
-            let Headers = {
-                // 'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(Body)
-            };
+                // set Headers
+                let Headers = {
+                    // 'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Length': Buffer.byteLength(Body)
+                };
 
-            // Put all together
-            let Options = {
-                method: Method,
-                url: "http://localhost:1880/mqttauth",
-                headers: Headers,
-                body: Body,
-                json: false
-            };
+                // Put all together
+                let Options = {
+                    method: Method,
+                    url: "http://localhost:1880/mqttauth",
+                    headers: Headers,
+                    body: Body,
+                    json: false
+                };
 
-            // make a post request
-            var authorized=false;
-            request.post(Options, function (err, response, body) {
-                if (response && response.statusCode && response.statusCode === 200) {
-                    authorized=true;
-                }
-                if (authorized) client.user = username;
-                callback(null, authorized);
-            });
+                // make a post request
+                var authorized=false;
+                request.post(Options, function (err, response, body) {
+                    if (response && response.statusCode && response.statusCode === 200) {
+                        authorized=true;
+                    }
+                    if (authorized) client.user = username;
+                    callback(null, authorized);
+                });                
+            }else{
+                callback(null, false);
+            }
+
 
         }
         server.authenticate = authenticate
